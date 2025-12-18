@@ -11,16 +11,12 @@ public class FraudCheckResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "claim_id", nullable = false)
+    @ManyToOne
     private Claim claim;
 
     private Boolean isFraudulent;
-
-    @Column(length = 2000)
     private String matchedRules;
-
     private LocalDateTime checkedAt;
 
-    // Getters and Setters
+    // getters and setters
 }

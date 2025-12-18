@@ -14,16 +14,14 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "policy_id", nullable = false)
+    @ManyToOne
     private Policy policy;
 
     @NotNull
     private LocalDate claimDate;
 
-    @NotNull
     @Positive
-    private Double claimAmount;
+    private double claimAmount;
 
     @NotBlank
     private String description;
@@ -36,5 +34,5 @@ public class Claim {
     )
     private Set<FraudRule> suspectedRules = new HashSet<>();
 
-    // Getters and Setters
+    // getters and setters
 }

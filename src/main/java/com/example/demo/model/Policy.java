@@ -5,15 +5,14 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "policies", uniqueConstraints = @UniqueConstraint(columnNames = "policyNumber"))
+@Table(name = "policies")
 public class Policy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
     private User user;
 
     @NotBlank
@@ -28,5 +27,5 @@ public class Policy {
     @NotNull
     private LocalDate endDate;
 
-    // Getters and Setters
+    // getters and setters
 }

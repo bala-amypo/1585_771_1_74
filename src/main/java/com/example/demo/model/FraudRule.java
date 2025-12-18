@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "fraud_rules", uniqueConstraints = @UniqueConstraint(columnNames = "ruleName"))
+@Table(name = "fraud_rules")
 public class FraudRule {
 
     @Id
@@ -31,5 +31,5 @@ public class FraudRule {
     @ManyToMany(mappedBy = "suspectedRules")
     private Set<Claim> claims = new HashSet<>();
 
-    // Getters and Setters
+    // getters and setters
 }
