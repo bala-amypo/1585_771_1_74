@@ -6,7 +6,6 @@ import com.example.demo.repository.ClaimRepository;
 import com.example.demo.repository.PolicyRepository;
 import com.example.demo.service.ClaimService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotationTransactional;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
