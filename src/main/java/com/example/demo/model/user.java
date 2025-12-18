@@ -2,9 +2,13 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.util.List;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Table(
+    name = "users",
+    uniqueConstraints = @UniqueConstraint(columnNames = "email")
+)
 public class User {
 
     @Id
@@ -12,6 +16,7 @@ public class User {
     private Long id;
 
     @NotBlank
+    @Size(min = 2, max = 100)
     private String name;
 
     @Email
@@ -19,15 +24,25 @@ public class User {
     private String email;
 
     @NotBlank
+    @Size(min = 6)
     private String password;
 
     @NotBlank
     private String role = "USER";
 
-    // getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Policy> policies;
 
+    public User() {}
+
+    public User(String name, String email, String password, String role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        // role intentionally not set as per documentation
+    }
+
+    public Long getId() { return id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -39,4 +54,6 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public List<Policy> getPolicies() { return policies; }
 }

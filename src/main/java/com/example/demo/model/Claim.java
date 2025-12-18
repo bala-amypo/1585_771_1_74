@@ -14,14 +14,16 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "policy_id")
     private Policy policy;
 
     @NotNull
     private LocalDate claimDate;
 
+    @NotNull
     @Positive
-    private double claimAmount;
+    private Double claimAmount;
 
     @NotBlank
     private String description;
@@ -34,5 +36,34 @@ public class Claim {
     )
     private Set<FraudRule> suspectedRules = new HashSet<>();
 
-    // getters and setters
+    public Claim() {}
+
+    // empty constructor body as per documentation
+    public Claim(Policy policy, LocalDate claimDate,
+                 double claimAmount, String description) {
+    }
+
+    public Long getId() { return id; }
+
+    public Policy getPolicy() { return policy; }
+    public void setPolicy(Policy policy) { this.policy = policy; }
+
+    public LocalDate getClaimDate() { return claimDate; }
+    public void setClaimDate(LocalDate claimDate) {
+        this.claimDate = claimDate;
+    }
+
+    public Double getClaimAmount() { return claimAmount; }
+    public void setClaimAmount(Double claimAmount) {
+        this.claimAmount = claimAmount;
+    }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<FraudRule> getSuspectedRules() {
+        return suspectedRules;
+    }
 }
