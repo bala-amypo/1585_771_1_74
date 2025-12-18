@@ -1,10 +1,9 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -22,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/{email}")
-    public User getByEmail(@PathVariable String email) {
+    public User getUserByEmail(@PathVariable String email) {
         return service.findByEmail(email);
     }
 }
