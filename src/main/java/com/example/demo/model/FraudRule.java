@@ -1,15 +1,10 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(
-    name = "fraud_rules",
-    uniqueConstraints = @UniqueConstraint(columnNames = "ruleName")
-)
+@Table(name = "fraud_rules")
 public class FraudRule {
 
     @Id
@@ -19,63 +14,28 @@ public class FraudRule {
     @NotBlank
     private String ruleName;
 
-    @NotBlank
-    private String conditionField;
-
-    @NotBlank
-    private String operator;
-
-    @NotBlank
-    private String value;
-
-    @NotBlank
-    private String severity;
+    private int severity; // FIX: should be int, NOT String
 
     @ManyToMany(mappedBy = "suspectedRules")
-    private Set<Claim> claims = new HashSet<>();
+    private Set<Claim> claims;
 
     public FraudRule() {}
 
-    // constructor with generic params & empty body as per documentation
-    public FraudRule(String a, String b, String c,
-                     String d, String e) {
-    }
+    // FIX: add constructor the tests expect
     public FraudRule(String ruleName, int severity) {
-    this.ruleName = ruleName;
-    this.severity = severity;
-}
-
-
-    public Long getId() { return id; }
-
-    public String getRuleName() { return ruleName; }
-    public void setRuleName(String ruleName) {
         this.ruleName = ruleName;
-    }
-
-    public String getConditionField() { return conditionField; }
-    public void setConditionField(String conditionField) {
-        this.conditionField = conditionField;
-    }
-
-    public String getOperator() { return operator; }
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getValue() { return value; }
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) {
         this.severity = severity;
     }
 
-    public Set<Claim> getClaims() { return claims; }
-    public void setClaims(Set<Claim> claims) {
-    this.claims = claims;
-}
+    // getters + setters
+    public Long getId() { return id; }
 
+    public String getRuleName() { return ruleName; }
+    public void setRuleName(String ruleName) { this.ruleName = ruleName; }
+
+    public int getSeverity() { return severity; }
+    public void setSeverity(int severity) { this.severity = severity; }
+
+    public Set<Claim> getClaims() { return claims; }
+    public void setClaims(Set<Claim> claims) { this.claims = claims; }
 }

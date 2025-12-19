@@ -4,6 +4,7 @@ import com.example.demo.model.Claim;
 import com.example.demo.model.FraudCheckResult;
 import com.example.demo.repository.ClaimRepository;
 import com.example.demo.repository.FraudCheckResultRepository;
+import com.example.demo.repository.FraudRuleRepository;
 import com.example.demo.service.FraudDetectionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
