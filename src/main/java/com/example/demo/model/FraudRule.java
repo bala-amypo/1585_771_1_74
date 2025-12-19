@@ -2,7 +2,10 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "fraud_rules")
 public class FraudRule {
@@ -14,28 +17,54 @@ public class FraudRule {
     @NotBlank
     private String ruleName;
 
-    private int severity; // FIX: should be int, NOT String
+    // TEST expects severity as INT (NOT String)
+    private int severity;
 
     @ManyToMany(mappedBy = "suspectedRules")
-    private Set<Claim> claims;
+    private Set<Claim> claims = new HashSet<>();
 
-    public FraudRule() {}
+    public FraudRule() {
+        // default no-args constructor (tests use this too)
+    }
 
-    // FIX: add constructor the tests expect
+    // 🔥 TEST EXPECTS EXACTLY THIS CONSTRUCTOR
     public FraudRule(String ruleName, int severity) {
         this.ruleName = ruleName;
         this.severity = severity;
     }
 
-    // getters + setters
-    public Long getId() { return id; }
+    // GETTERS
+    public Long getId() {
+        return id;
+    }
 
-    public String getRuleName() { return ruleName; }
-    public void setRuleName(String ruleName) { this.ruleName = ruleName; }
+    public String getRuleName() {
+        return ruleName;
+    }
 
-    public int getSeverity() { return severity; }
-    public void setSeverity(int severity) { this.severity = severity; }
+    public int getSeverity() {
+        return severity;
+    }
 
-    public Set<Claim> getClaims() { return claims; }
-    public void setClaims(Set<Claim> claims) { this.claims = claims; }
+    public Set<Claim> getClaims() {
+        return claims;
+    }
+
+    // SETTERS
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+
+    public void setSeverity(int severity) {
+        this.severity = severity;
+    }
+
+    public void setClaims(Set<Claim> claims) {
+        this.claims = claims;
+    }
+
+    // OPTIONAL helper for tests
+    public void addClaim(Claim claim) {
+        this.claims.add(claim);
+    }
 }
