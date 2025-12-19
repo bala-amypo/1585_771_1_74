@@ -25,24 +25,24 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/login")
+   @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, String> request) {
+    String email = request.get("email");
+    String password = request.get("password");
 
-        String email = request.get("email");
-        String password = request.get("password");
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        String token = jwtUtil.generateToken(user.getEmail());
-
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-
-        return response;
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+        throw new RuntimeException("Invalid credentials");
     }
+
+    // FIX: Pass the 'user' object (type User), NOT 'user.getEmail()' (type String)
+    String token = jwtUtil.generateToken(user); 
+
+    Map<String, String> response = new HashMap<>();
+    response.put("token", token);
+
+    return response;
+}
 }
