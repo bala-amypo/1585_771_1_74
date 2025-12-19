@@ -19,7 +19,7 @@ public class JwtUtil {
     }
 
     public String generateToken(User user) {
-        return "jwt-token-for-" + user.getEmail();
+        String token = jwtUtil.generateToken(user);
     }
 
     public boolean validateToken(String token) {
