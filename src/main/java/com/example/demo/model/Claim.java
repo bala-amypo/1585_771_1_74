@@ -57,6 +57,9 @@ public class Claim {
     public Set<FraudRule> getSuspectedRules() { return suspectedRules; }
 
     // SETTERS
+    public void setId(Long id){
+        this.id=id;
+    }
     public void setPolicy(Policy policy) {
         this.policy = policy;
     }
