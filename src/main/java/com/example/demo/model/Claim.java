@@ -30,40 +30,59 @@ public class Claim {
 
     @ManyToMany
     @JoinTable(
-        name = "claim_fraud_rules",
-        joinColumns = @JoinColumn(name = "claim_id"),
-        inverseJoinColumns = @JoinColumn(name = "fraud_rule_id")
+            name = "claim_fraud_rules",
+            joinColumns = @JoinColumn(name = "claim_id"),
+            inverseJoinColumns = @JoinColumn(name = "fraud_rule_id")
     )
     private Set<FraudRule> suspectedRules = new HashSet<>();
 
     public Claim() {}
 
-    // empty constructor body as per documentation
+    // Full constructor with proper assignments
     public Claim(Policy policy, LocalDate claimDate,
                  double claimAmount, String description) {
+        this.policy = policy;
+        this.claimDate = claimDate;
+        this.claimAmount = claimAmount;
+        this.description = description;
     }
 
+    // GETTERS
     public Long getId() { return id; }
 
     public Policy getPolicy() { return policy; }
-    public void setPolicy(Policy policy) { this.policy = policy; }
-
     public LocalDate getClaimDate() { return claimDate; }
+    public Double getClaimAmount() { return claimAmount; }
+    public String getDescription() { return description; }
+    public Set<FraudRule> getSuspectedRules() { return suspectedRules; }
+
+    // SETTERS
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
+    }
+
     public void setClaimDate(LocalDate claimDate) {
         this.claimDate = claimDate;
     }
 
-    public Double getClaimAmount() { return claimAmount; }
     public void setClaimAmount(Double claimAmount) {
         this.claimAmount = claimAmount;
     }
 
-    public String getDescription() { return description; }
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public Set<FraudRule> getSuspectedRules() {
-        return suspectedRules;
+    public void setSuspectedRules(Set<FraudRule> suspectedRules) {
+        this.suspectedRules = suspectedRules;
+    }
+
+    // HELPER METHODS (useful for service layer)
+    public void addSuspectedRule(FraudRule rule) {
+        this.suspectedRules.add(rule);
+    }
+
+    public void removeSuspectedRule(FraudRule rule) {
+        this.suspectedRules.remove(rule);
     }
 }
