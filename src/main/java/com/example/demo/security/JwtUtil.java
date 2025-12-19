@@ -22,9 +22,7 @@ public class JwtUtil {
     public String generateToken(User user) {
         return "jwt-token-for-" + user.getEmail();
     }
-     public String generateToken(String email) {
-        return "jwt-token-for-" + email;
-    }
+
     public boolean validateToken(String token) {
         return token != null && token.startsWith("jwt-token-for-");
     }
