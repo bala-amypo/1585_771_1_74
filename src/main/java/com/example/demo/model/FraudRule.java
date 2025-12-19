@@ -28,7 +28,8 @@ public class FraudRule {
     }
 
     // 🔥 TEST EXPECTS EXACTLY THIS CONSTRUCTOR
-    public FraudRule(String ruleName, int severity) {
+    public FraudRule(Long id, String ruleName, int severity) {
+        this.id=id;
         this.ruleName = ruleName;
         this.severity = severity;
     }
