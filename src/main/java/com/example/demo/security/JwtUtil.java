@@ -1,7 +1,7 @@
 package com.example.demo.security;
 
 import org.springframework.stereotype.Component;
-
+import java.lang.String;
 @Component
 public class JwtUtil {
         public JwtUtil(String secret, int expirationSeconds) {
