@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+        public JwtUtil(String secret, int expirationSeconds) {
+            // ignore these inputs, your project doesn’t use real JWT anyway
+        }
 
     public String generateToken(String email) {
         // Simple dummy token (enough for compilation & demo)

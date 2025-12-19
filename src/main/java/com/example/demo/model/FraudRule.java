@@ -40,6 +40,11 @@ public class FraudRule {
     public FraudRule(String a, String b, String c,
                      String d, String e) {
     }
+    public FraudRule(String ruleName, int severity) {
+    this.ruleName = ruleName;
+    this.severity = severity;
+}
+
 
     public Long getId() { return id; }
 
@@ -69,4 +74,8 @@ public class FraudRule {
     }
 
     public Set<Claim> getClaims() { return claims; }
+    public void setClaims(Set<Claim> claims) {
+    this.claims = claims;
+}
+
 }
