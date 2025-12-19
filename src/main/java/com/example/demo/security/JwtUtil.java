@@ -8,7 +8,7 @@ public class JwtUtil {
 
     private String secret = "default-secret";
     private int expirationSeconds = 3600;
-
+    String jwt
     // Constructor used by Spring Boot (safe)
     public JwtUtil() {}
 
@@ -20,6 +20,9 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         String token = jwtUtil.generateToken(user);
+    }
+ public String generateToken(String email) {
+        String token = "jwt-token-for-"+email;
     }
 
     public boolean validateToken(String token) {
