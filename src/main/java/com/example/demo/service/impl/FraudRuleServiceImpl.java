@@ -7,14 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional
 public class FraudRuleServiceImpl implements FraudRuleService {
-
-    private static final Set<String> ALLOWED_SEVERITIES =
-            Set.of("LOW", "MEDIUM", "HIGH");
 
     private final FraudRuleRepository fraudRuleRepository;
 
@@ -25,8 +21,9 @@ public class FraudRuleServiceImpl implements FraudRuleService {
     @Override
     public FraudRule addRule(FraudRule rule) {
 
-        if (!ALLOWED_SEVERITIES.contains(rule.getSeverity())) {
-            throw new IllegalArgumentException("Invalid severity level");
+        // FIXED: severity is int now
+        if (rule.getSeverity() < 0) {
+            throw new IllegalArgumentException("Severity must be non-negative");
         }
 
         fraudRuleRepository.findByRuleName(rule.getRuleName())
