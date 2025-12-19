@@ -17,6 +17,8 @@ public class FraudDetectionServiceImpl implements FraudDetectionService {
 
     private final ClaimRepository claimRepository;
     private final FraudCheckResultRepository resultRepository;
+    private final FraudRuleRepository fraudRuleRepository;
+
 
    public FraudDetectionServiceImpl(ClaimRepository claimRepository,
                                  FraudRuleRepository fraudRuleRepository,
