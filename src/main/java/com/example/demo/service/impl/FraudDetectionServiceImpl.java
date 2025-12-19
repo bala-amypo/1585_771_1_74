@@ -18,11 +18,14 @@ public class FraudDetectionServiceImpl implements FraudDetectionService {
     private final ClaimRepository claimRepository;
     private final FraudCheckResultRepository resultRepository;
 
-    public FraudDetectionServiceImpl(ClaimRepository claimRepository,
-                                     FraudCheckResultRepository resultRepository) {
-        this.claimRepository = claimRepository;
-        this.resultRepository = resultRepository;
-    }
+   public FraudDetectionServiceImpl(ClaimRepository claimRepository,
+                                 FraudRuleRepository fraudRuleRepository,
+                                 FraudCheckResultRepository resultRepository) {
+    this.claimRepository = claimRepository;
+    this.fraudRuleRepository = fraudRuleRepository;
+    this.resultRepository = resultRepository;
+}
+
 
     @Override
     public FraudCheckResult processFraudCheck(Long claimId) {
