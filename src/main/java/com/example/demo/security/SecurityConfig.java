@@ -21,4 +21,9 @@ public class SecurityConfig {
 
         return http.build();
     }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // BCrypt is the industry standard for password hashing
+        return new BCryptPasswordEncoder();
+    }
 }
