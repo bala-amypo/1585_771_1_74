@@ -1,4 +1,5 @@
 package com.example.demo.security;
+import com.example.demo.model.User;
 
 import org.springframework.stereotype.Component;
 
@@ -17,8 +18,8 @@ public class JwtUtil {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generateToken(String email) {
-        return "jwt-token-for-" + email;
+    public String generateToken(User user) {
+        return "jwt-token-for-" + user.getEmail();
     }
 
     public boolean validateToken(String token) {
