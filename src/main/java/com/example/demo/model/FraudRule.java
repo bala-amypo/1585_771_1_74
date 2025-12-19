@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
+import java.util.*;
 @Entity
 @Table(name = "fraud_rules")
 public class FraudRule {
