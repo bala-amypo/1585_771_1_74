@@ -4,6 +4,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.ForwardedHeaderFilter;
+
 import java.util.List;
 
 @Configuration
@@ -12,9 +14,15 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                // You need to change the port as per your server
                 .servers(List.of(
-                        new Server().url("https://9109.pro604cr.amypo.ai")
+                        new Server()
+                                .url("https://9109.pro604cr.amypo.ai")
+                                .description("Production Server")
                 ));
-        }
+    }
+
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
 }
