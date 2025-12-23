@@ -37,7 +37,6 @@ public class AuthController {
         throw new RuntimeException("Invalid credentials");
     }
 
-    // FIX: Pass the 'user' object (type User), NOT 'user.getEmail()' (type String)
     String token = jwtUtil.generateToken(user.getEmail());
 
 
