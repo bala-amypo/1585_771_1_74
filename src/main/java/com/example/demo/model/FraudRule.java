@@ -20,17 +20,17 @@ public class FraudRule {
     @ManyToMany(mappedBy = "suspectedRules")
     private Set<Claim> claims = new HashSet<>();
 
-    // ⭐ MUST HAVE — required by JPA + portal tests
+    // ⭐ REQUIRED BY JPA & TESTS
     public FraudRule() {}
 
-    // ⭐ MUST HAVE — portal tests call new FraudRule("rule", 3)
+    // ⭐ TESTS CALL THIS EXACT CONSTRUCTOR
     public FraudRule(String ruleName, int severity) {
         this.ruleName = ruleName;
         this.severity = severity;
         this.claims = new HashSet<>();
     }
 
-    // ⭐ GETTERS + SETTERS (portal tests use these)
+    // ⭐ GETTERS + SETTERS (used by tests)
     public Long getId() {
         return id;
     }
