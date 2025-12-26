@@ -37,7 +37,7 @@ public class AuthController {
         throw new RuntimeException("Invalid credentials");
     }
 
-    String token = jwtUtil.generateToken(user.getEmail());
+String token = jwtUtil.generateToken(user.getEmail());
 
 
     Map<String, String> response = new HashMap<>();
