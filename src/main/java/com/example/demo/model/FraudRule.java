@@ -14,24 +14,23 @@ public class FraudRule {
 
     private String ruleName;
 
-    // Tests expect severity as int
+    // Test expects severity INT (not String)
     private int severity;
 
     @ManyToMany(mappedBy = "suspectedRules")
     private Set<Claim> claims = new HashSet<>();
 
-    // REQUIRED by JPA and TEST CASES
+    // ⭐ MUST HAVE — required by JPA + portal tests
     public FraudRule() {}
 
-    // REQUIRED by portal tests
+    // ⭐ MUST HAVE — portal tests call new FraudRule("rule", 3)
     public FraudRule(String ruleName, int severity) {
         this.ruleName = ruleName;
         this.severity = severity;
         this.claims = new HashSet<>();
     }
 
-    // ---------- GETTERS & SETTERS ----------
-
+    // ⭐ GETTERS + SETTERS (portal tests use these)
     public Long getId() {
         return id;
     }
