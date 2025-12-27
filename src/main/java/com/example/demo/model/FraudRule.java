@@ -1,3 +1,5 @@
+
+
 package com.example.demo.model;
 
 import jakarta.persistence.*;
@@ -5,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "fraud_rules")
 public class FraudRule {
 
     @Id
@@ -13,24 +14,25 @@ public class FraudRule {
     private Long id;
 
     private String ruleName;
-
-    // Test expects severity INT (not String)
-    private int severity;
+    private String conditionField;
+    private String operator;
+    private String value;
+    private String severity;
 
     @ManyToMany(mappedBy = "suspectedRules")
     private Set<Claim> claims = new HashSet<>();
 
-    // ⭐ REQUIRED BY JPA & TESTS
-    public FraudRule() {}
-
-    // ⭐ TESTS CALL THIS EXACT CONSTRUCTOR
-    public FraudRule(String ruleName, int severity) {
-        this.ruleName = ruleName;
-        this.severity = severity;
-        this.claims = new HashSet<>();
+    public FraudRule() {
     }
 
-    // ⭐ GETTERS + SETTERS (used by tests)
+    public FraudRule(String ruleName, String conditionField, String operator, String value, String severity) {
+        this.ruleName = ruleName;
+        this.conditionField = conditionField;
+        this.operator = operator;
+        this.value = value;
+        setSeverity(severity);
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,11 +45,40 @@ public class FraudRule {
         this.ruleName = ruleName;
     }
 
-    public int getSeverity() {
+    public String getConditionField() {
+        return conditionField;
+    }
+
+    public void setConditionField(String conditionField) {
+        this.conditionField = conditionField;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getSeverity() {
         return severity;
     }
 
-    public void setSeverity(int severity) {
+    public void setSeverity(String severity) {
+        if (!severity.equals("LOW") &&
+            !severity.equals("MEDIUM") &&
+            !severity.equals("HIGH")) {
+            throw new IllegalArgumentException("Invalid severity");
+        }
         this.severity = severity;
     }
 

@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,20 +13,22 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private LocalDate claimDate;
+
+    private Double claimAmount;
+
+    private String description;
+
+    /* -------------------------------
+       Policy relationship
+    -------------------------------- */
+    @ManyToOne
     @JoinColumn(name = "policy_id")
     private Policy policy;
 
-    @NotNull
-    private LocalDate claimDate;
-
-    @NotNull
-    @Positive
-    private Double claimAmount;
-
-    @NotBlank
-    private String description;
-
+    /* -------------------------------
+       Fraud rules (Many-to-Many)
+    -------------------------------- */
     @ManyToMany
     @JoinTable(
             name = "claim_fraud_rules",
@@ -36,56 +37,82 @@ public class Claim {
     )
     private Set<FraudRule> suspectedRules = new HashSet<>();
 
-    public Claim() {}
+    /* -------------------------------
+       Fraud check result (OWNING SIDE)
+    -------------------------------- */
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fraud_check_result_id")
+    private FraudCheckResult fraudCheckResult;
 
-    // Full constructor with proper assignments
-    public Claim(Policy policy, LocalDate claimDate,
-                 double claimAmount, String description) {
+    /* -------------------------------
+       Constructors
+    -------------------------------- */
+    public Claim() {
+    }
+
+    public Claim(Policy policy, LocalDate claimDate, Double claimAmount, String description) {
         this.policy = policy;
         this.claimDate = claimDate;
         this.claimAmount = claimAmount;
         this.description = description;
     }
 
-    // GETTERS
-    public Long getId() { return id; }
-
-    public Policy getPolicy() { return policy; }
-    public LocalDate getClaimDate() { return claimDate; }
-    public Double getClaimAmount() { return claimAmount; }
-    public String getDescription() { return description; }
-    public Set<FraudRule> getSuspectedRules() { return suspectedRules; }
-
-    // SETTERS
-    public void setId(Long id){
-        this.id=id;
+    /* -------------------------------
+       Getters & Setters
+    -------------------------------- */
+    public Long getId() {
+        return id;
     }
-    public void setPolicy(Policy policy) {
-        this.policy = policy;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDate getClaimDate() {
+        return claimDate;
     }
 
     public void setClaimDate(LocalDate claimDate) {
         this.claimDate = claimDate;
     }
 
+    public Double getClaimAmount() {
+        return claimAmount;
+    }
+
     public void setClaimAmount(Double claimAmount) {
         this.claimAmount = claimAmount;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public Policy getPolicy() {
+        return policy;
+    }
+
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
+    }
+
+    public Set<FraudRule> getSuspectedRules() {
+        return suspectedRules;
+    }
+
     public void setSuspectedRules(Set<FraudRule> suspectedRules) {
         this.suspectedRules = suspectedRules;
     }
 
-    // HELPER METHODS (useful for service layer)
-    public void addSuspectedRule(FraudRule rule) {
-        this.suspectedRules.add(rule);
+    public FraudCheckResult getFraudCheckResult() {
+        return fraudCheckResult;
     }
 
-    public void removeSuspectedRule(FraudRule rule) {
-        this.suspectedRules.remove(rule);
+    public void setFraudCheckResult(FraudCheckResult fraudCheckResult) {
+        this.fraudCheckResult = fraudCheckResult;
     }
 }

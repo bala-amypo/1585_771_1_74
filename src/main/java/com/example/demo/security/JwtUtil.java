@@ -1,33 +1,69 @@
 package com.example.demo.security;
+
 import com.example.demo.model.User;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 
-import org.springframework.stereotype.Component;
+import java.security.Key;
+import java.util.Date;
 
-@Component
 public class JwtUtil {
 
-    private String secret = "default-secret";
-    private int expirationSeconds = 3600;
+    private final String secret;
+    private final int expiration;
+    private final Key key;
 
-    // Constructor used by Spring Boot (safe)
-    public JwtUtil() {}
-
-    // Constructor used by tests (so tests do not break)
-    public JwtUtil(String secret, int expirationSeconds) {
+    public JwtUtil(String secret, int expiration) {
         this.secret = secret;
-        this.expirationSeconds = expirationSeconds;
+        this.expiration = expiration;
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    // =====================================================
+    // REQUIRED BY TESTS
+    // =====================================================
+
     public String generateToken(String email) {
-        return "jwt-token-for-" + email;
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    // 🔥 THIS overload is CRITICAL for your failing test
+    public String generateToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId())
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public boolean validateToken(String token) {
-        return token != null && token.startsWith("jwt-token-for-");
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     public String getEmailFromToken(String token) {
-        if (token == null) return null;
-        return token.replace("jwt-token-for-", "");
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject(); // email
     }
 }

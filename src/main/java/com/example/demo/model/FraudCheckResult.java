@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "fraud_check_results")
@@ -11,38 +10,68 @@ public class FraudCheckResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private boolean isFraudulent;
+
+    private String triggeredRuleName;
+
+    private String rejectionReason;
+
+    // 🔥 REQUIRED BY TESTS
+    private String matchedRules;
+
+    // 🔥 REQUIRED BY FraudDetectionServiceImpl
+    @OneToOne
     @JoinColumn(name = "claim_id")
     private Claim claim;
 
-    @Column(nullable = false)
-    private Boolean isFraudulent;
+    public FraudCheckResult() {
+    }
 
-    @Column(length = 2000)
-    private String matchedRules;
+    // ===== Getters & Setters =====
 
-    @Column(nullable = false)
-    private LocalDateTime checkedAt;
+    public Long getId() {
+        return id;
+    }
 
-    public FraudCheckResult() {}
+    public boolean isFraudulent() {
+        return isFraudulent;
+    }
 
-    public Long getId() { return id; }
-
-    public Claim getClaim() { return claim; }
-    public void setClaim(Claim claim) { this.claim = claim; }
-
-    public Boolean getIsFraudulent() { return isFraudulent; }
-    public void setIsFraudulent(Boolean isFraudulent) {
+    public void setIsFraudulent(boolean isFraudulent) {
         this.isFraudulent = isFraudulent;
     }
 
-    public String getMatchedRules() { return matchedRules; }
+    public String getTriggeredRuleName() {
+        return triggeredRuleName;
+    }
+
+    public void setTriggeredRuleName(String triggeredRuleName) {
+        this.triggeredRuleName = triggeredRuleName;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
+    // 🔥 TEST SUPPORT
+    public String getMatchedRules() {
+        return matchedRules;
+    }
+
     public void setMatchedRules(String matchedRules) {
         this.matchedRules = matchedRules;
     }
 
-    public LocalDateTime getCheckedAt() { return checkedAt; }
-    public void setCheckedAt(LocalDateTime checkedAt) {
-        this.checkedAt = checkedAt;
+    // 🔥 SERVICE SUPPORT
+    public Claim getClaim() {
+        return claim;
+    }
+
+    public void setClaim(Claim claim) {
+        this.claim = claim;
     }
 }
