@@ -13,25 +13,20 @@ public class HqlQueryHelper {
     @PersistenceContext
     private EntityManager entityManager;
 
-    /**
-     * Find claims with amount greater than given value
-     */
-    public List<Claim> findHighValueClaims(double minAmount) {
-        return entityManager.createQuery(
-                        "SELECT c FROM Claim c WHERE c.claimAmount > :amount",
-                        Claim.class)
-                .setParameter("amount", minAmount)
-                .getResultList();
-    }
-
-    /**
-     * Search claims by description keyword (case-insensitive)
-     */
     public List<Claim> findClaimsByDescriptionKeyword(String keyword) {
         return entityManager.createQuery(
-                        "SELECT c FROM Claim c WHERE LOWER(c.description) LIKE :kw",
-                        Claim.class)
-                .setParameter("kw", "%" + keyword.toLowerCase() + "%")
-                .getResultList();
+                "SELECT c FROM Claim c WHERE LOWER(c.description) LIKE LOWER(:kw)",
+                Claim.class
+        ).setParameter("kw", "%" + keyword + "%")
+         .getResultList();
+    }
+
+    public List<Claim> findHighValueClaims(Double minAmount) {
+        return entityManager.createQuery(
+                "SELECT c FROM Claim c WHERE c.claimAmount > :amt",
+                Claim.class
+        ).setParameter("amt", minAmount)
+         .getResultList();
     }
 }
+
