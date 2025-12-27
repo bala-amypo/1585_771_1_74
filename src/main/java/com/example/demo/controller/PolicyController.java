@@ -2,29 +2,29 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Policy;
 import com.example.demo.service.PolicyService;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/policies")
+@RequestMapping("/policies")
 public class PolicyController {
 
-    private final PolicyService service;
+    private final PolicyService policyService;
 
-    public PolicyController(PolicyService service) {
-        this.service = service;
+    public PolicyController(PolicyService policyService) {
+        this.policyService = policyService;
     }
 
-    @PostMapping
-    public Policy createPolicy(@RequestParam Long userId,
-                               @Valid @RequestBody Policy policy) {
-        return service.createPolicy(userId, policy);
+    @PostMapping("/user/{userId}")
+    public Policy createPolicy(
+            @PathVariable Long userId,
+            @RequestBody Policy policy) {
+        return policyService.createPolicy(userId, policy);
     }
 
     @GetMapping("/user/{userId}")
-    public List<Policy> getPoliciesByUser(@PathVariable Long userId) {
-        return service.getPoliciesByUser(userId);
+    public List<Policy> getPolicies(@PathVariable Long userId) {
+        return policyService.getPoliciesByUser(userId);
     }
 }

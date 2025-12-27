@@ -2,28 +2,27 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FraudRule;
 import com.example.demo.service.FraudRuleService;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fraud-rules")
+@RequestMapping("/api/rules")
 public class FraudRuleController {
 
-    private final FraudRuleService service;
+    private final FraudRuleService fraudRuleService;
 
-    public FraudRuleController(FraudRuleService service) {
-        this.service = service;
+    public FraudRuleController(FraudRuleService fraudRuleService) {
+        this.fraudRuleService = fraudRuleService;
     }
 
     @PostMapping
-    public FraudRule addRule(@Valid @RequestBody FraudRule rule) {
-        return service.addRule(rule);
+    public FraudRule addRule(@RequestBody FraudRule rule) {
+        return fraudRuleService.addRule(rule);
     }
 
     @GetMapping
-    public List<FraudRule> getAllRules() {
-        return service.getAllRules();
+    public List<FraudRule> getRules() {
+        return fraudRuleService.getAllRules();
     }
 }
