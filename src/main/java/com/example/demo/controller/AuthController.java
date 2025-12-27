@@ -1,48 +1,43 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.security.JwtUtil;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final UserService userService;
 
-    public AuthController(UserRepository userRepository,
-                          PasswordEncoder passwordEncoder,
-                          JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
-   @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> request) {
-    String email = request.get("email");
-    String password = request.get("password");
+    @PostMapping("/register")
+    public AuthResponse register(@RequestBody User user) {
 
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+        User savedUser = userService.register(user);
 
-    if (!passwordEncoder.matches(password, user.getPassword())) {
-        throw new RuntimeException("Invalid credentials");
+        AuthResponse dto = new AuthResponse();
+        dto.id = savedUser.getId();
+        dto.email = savedUser.getEmail();
+        dto.role = savedUser.getRole();
+
+        return dto;
     }
 
-String token = jwtUtil.generateToken(user.getEmail());
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody User user) {
 
+        User found = userService.findByEmail(user.getEmail());
 
-    Map<String, String> response = new HashMap<>();
-    response.put("token", token);
+        AuthResponse dto = new AuthResponse();
+        dto.id = found.getId();
+        dto.email = found.getEmail();
+        dto.role = found.getRole();
 
-    return response;
-}
+        return dto;
+    }
 }

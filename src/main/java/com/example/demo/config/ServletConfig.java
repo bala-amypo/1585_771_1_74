@@ -1,18 +1,31 @@
 package com.example.demo.config;
 
-import com.example.demo.servlet.HelloServlet;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ServletConfig {
 
     @Bean
-    public ServletRegistrationBean<HelloServlet> helloServlet() {
-        ServletRegistrationBean<HelloServlet> bean =
-                new ServletRegistrationBean<>(new HelloServlet(), "/hello-servlet");
-        bean.setLoadOnStartup(1);
-        return bean;
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+            )
+            .formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable());
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
