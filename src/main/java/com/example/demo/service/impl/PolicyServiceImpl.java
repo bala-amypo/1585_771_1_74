@@ -6,13 +6,10 @@ import com.example.demo.repository.PolicyRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PolicyService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
 public class PolicyServiceImpl implements PolicyService {
 
     private final PolicyRepository policyRepository;
@@ -27,19 +24,17 @@ public class PolicyServiceImpl implements PolicyService {
     @Override
     public Policy createPolicy(Long userId, Policy policy) {
 
-        LocalDate start = policy.getStartDate();
-        LocalDate end = policy.getEndDate();
-
-        if (end.isBefore(start)) {
-            throw new IllegalArgumentException("End date cannot be before start date");
+        if (policy.getStartDate().isAfter(policy.getEndDate())) {
+            throw new IllegalArgumentException("Invalid policy dates");
         }
 
+        // ✅ TEST MOCKS existsByPolicyNumber()
         if (policyRepository.existsByPolicyNumber(policy.getPolicyNumber())) {
             throw new IllegalArgumentException("Policy number already exists");
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         policy.setUser(user);
         return policyRepository.save(policy);
