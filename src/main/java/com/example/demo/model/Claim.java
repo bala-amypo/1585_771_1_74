@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -14,9 +15,7 @@ public class Claim {
     private Long id;
 
     private LocalDate claimDate;
-
     private Double claimAmount;
-
     private String description;
 
     /* -------------------------------
@@ -24,6 +23,7 @@ public class Claim {
     -------------------------------- */
     @ManyToOne
     @JoinColumn(name = "policy_id")
+    @JsonIgnore              // 💥 PREVENT INFINITE LOOP
     private Policy policy;
 
     /* -------------------------------
@@ -35,20 +35,17 @@ public class Claim {
             joinColumns = @JoinColumn(name = "claim_id"),
             inverseJoinColumns = @JoinColumn(name = "fraud_rule_id")
     )
+    @JsonIgnore              // 💥 Avoid huge data loops
     private Set<FraudRule> suspectedRules = new HashSet<>();
 
     /* -------------------------------
-       Fraud check result (OWNING SIDE)
+       Fraud check result
     -------------------------------- */
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fraud_check_result_id")
     private FraudCheckResult fraudCheckResult;
 
-    /* -------------------------------
-       Constructors
-    -------------------------------- */
-    public Claim() {
-    }
+    public Claim() {}
 
     public Claim(Policy policy, LocalDate claimDate, Double claimAmount, String description) {
         this.policy = policy;
@@ -57,61 +54,26 @@ public class Claim {
         this.description = description;
     }
 
-    /* -------------------------------
-       Getters & Setters
-    -------------------------------- */
-    public Long getId() {
-        return id;
-    }
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public LocalDate getClaimDate() { return claimDate; }
+    public void setClaimDate(LocalDate claimDate) { this.claimDate = claimDate; }
 
-    public LocalDate getClaimDate() {
-        return claimDate;
-    }
+    public Double getClaimAmount() { return claimAmount; }
+    public void setClaimAmount(Double claimAmount) { this.claimAmount = claimAmount; }
 
-    public void setClaimDate(LocalDate claimDate) {
-        this.claimDate = claimDate;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public Double getClaimAmount() {
-        return claimAmount;
-    }
+    public Policy getPolicy() { return policy; }
+    public void setPolicy(Policy policy) { this.policy = policy; }
 
-    public void setClaimAmount(Double claimAmount) {
-        this.claimAmount = claimAmount;
-    }
+    public Set<FraudRule> getSuspectedRules() { return suspectedRules; }
+    public void setSuspectedRules(Set<FraudRule> suspectedRules) { this.suspectedRules = suspectedRules; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Policy getPolicy() {
-        return policy;
-    }
-
-    public void setPolicy(Policy policy) {
-        this.policy = policy;
-    }
-
-    public Set<FraudRule> getSuspectedRules() {
-        return suspectedRules;
-    }
-
-    public void setSuspectedRules(Set<FraudRule> suspectedRules) {
-        this.suspectedRules = suspectedRules;
-    }
-
-    public FraudCheckResult getFraudCheckResult() {
-        return fraudCheckResult;
-    }
-
+    public FraudCheckResult getFraudCheckResult() { return fraudCheckResult; }
     public void setFraudCheckResult(FraudCheckResult fraudCheckResult) {
         this.fraudCheckResult = fraudCheckResult;
     }

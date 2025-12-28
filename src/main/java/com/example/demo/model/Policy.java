@@ -6,113 +6,113 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "policies")
-public class Policy {
+@Table(name = "claims")
+public class Claim {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String policyNumber;
+    private LocalDate claimDate;
 
-    private String policyType;
+    private Double claimAmount;
 
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+    private String description;
 
     /* -------------------------------
-       Relationship with User
+       Policy relationship
     -------------------------------- */
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "policy_id")
+    private Policy policy;
 
     /* -------------------------------
-       Relationship with Claims
+       Fraud rules (Many-to-Many)
     -------------------------------- */
-    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
-    private Set<Claim> claims = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "claim_fraud_rules",
+            joinColumns = @JoinColumn(name = "claim_id"),
+            inverseJoinColumns = @JoinColumn(name = "fraud_rule_id")
+    )
+    private Set<FraudRule> suspectedRules = new HashSet<>();
+
+    /* -------------------------------
+       Fraud check result (OWNING SIDE)
+    -------------------------------- */
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fraud_check_result_id")
+    private FraudCheckResult fraudCheckResult;
 
     /* -------------------------------
        Constructors
     -------------------------------- */
-
-    // ✅ Required by JPA
-    public Policy() {
+    public Claim() {
     }
 
-    // ✅ REQUIRED BY TEST CASES
-    public Policy(User user,
-                  String policyNumber,
-                  String policyType,
-                  LocalDate startDate,
-                  LocalDate endDate) {
-        this.user = user;
-        this.policyNumber = policyNumber;
-        this.policyType = policyType;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public Claim(Policy policy, LocalDate claimDate, Double claimAmount, String description) {
+        this.policy = policy;
+        this.claimDate = claimDate;
+        this.claimAmount = claimAmount;
+        this.description = description;
     }
 
     /* -------------------------------
        Getters & Setters
     -------------------------------- */
-
-    // ✅ REQUIRED BY TESTS
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public String getPolicyNumber() {
-        return policyNumber;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setPolicyNumber(String policyNumber) {
-        this.policyNumber = policyNumber;
+    public LocalDate getClaimDate() {
+        return claimDate;
     }
 
-    public String getPolicyType() {
-        return policyType;
+    public void setClaimDate(LocalDate claimDate) {
+        this.claimDate = claimDate;
     }
 
-    public void setPolicyType(String policyType) {
-        this.policyType = policyType;
+    public Double getClaimAmount() {
+        return claimAmount;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public void setClaimAmount(Double claimAmount) {
+        this.claimAmount = claimAmount;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public String getDescription() {
+        return description;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public Policy getPolicy() {
+        return policy;
     }
 
-    public User getUser() {
-        return user;
+    public void setPolicy(Policy policy) {
+        this.policy = policy;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public Set<FraudRule> getSuspectedRules() {
+        return suspectedRules;
     }
 
-    public Set<Claim> getClaims() {
-        return claims;
+    public void setSuspectedRules(Set<FraudRule> suspectedRules) {
+        this.suspectedRules = suspectedRules;
     }
 
-    public void setClaims(Set<Claim> claims) {
-        this.claims = claims;
+    public FraudCheckResult getFraudCheckResult() {
+        return fraudCheckResult;
+    }
+
+    public void setFraudCheckResult(FraudCheckResult fraudCheckResult) {
+        this.fraudCheckResult = fraudCheckResult;
     }
 }
