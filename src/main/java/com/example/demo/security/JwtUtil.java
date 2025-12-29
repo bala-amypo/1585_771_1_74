@@ -19,9 +19,6 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // =====================================================
-    // REQUIRED BY TESTS
-    // =====================================================
 
     public String generateToken(String email) {
         return Jwts.builder()
